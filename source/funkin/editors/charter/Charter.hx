@@ -876,7 +876,7 @@ class Charter extends UIState {
 	}
 
 	var deletedNotes:Selection = new Selection();
-	public function updateNoteLogic(elapsed:Float) {
+	public function updateNoteLogic(elapsed:Float):Dynamic {
 		updateSelectionLogic();
 
 		var pointerPressed:Bool = false;
@@ -907,14 +907,8 @@ class Charter extends UIState {
 			pointerJustReleasedRight = FlxG.mouse.justReleasedRight;
 		}
 
-		// Disable all interaction inputs if overlapping the mobile pad
-		if (touchingPad) {
-			pointerPressed = false;
-			pointerJustPressed = false;
-			pointerJustReleased = false;
-			pointerJustPressedRight = false;
-			pointerJustReleasedRight = false;
-		}
+		// ignore the codes when touching the mobilePad
+		if (touchingPad) return;
 
 		/**
 		 * NOTE DRAG HANDLING
