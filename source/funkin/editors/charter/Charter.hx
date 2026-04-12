@@ -814,7 +814,7 @@ class Charter extends UIState {
 		}
 
 		var pointerJustReleased:Bool = controls.mobileC ? ScreenUtil.touch.justReleased : FlxG.mouse.justReleased;
-		var touchingPad:Bool = controls.mobileC && FlxG.mouse.overlaps(mobileManager.mobilePad, mobileManager.mobilePad.camera);
+		var touchingPad:Bool = isTouchingMobilePad();
 
 		// Only process selection changes if we aren't touching the mobile controls
 		if (!touchingPad) {
@@ -863,6 +863,20 @@ class Charter extends UIState {
 		}
 	}
 
+	/* The Function That Checks MobilePad Touch */
+	public function isTouchingMobilePad():Bool {
+		if (!controls.mobileC || mobileManager == null || mobileManager.mobilePad == null) return false;
+
+		for (buttonGroup in mobileManager.mobilePad.buttons) {
+			for (button in buttonGroup) {
+				if (button != null && (FlxG.mouse.overlaps(button, button.camera) || FlxG.mouse.overlaps(button, mobileManager.mobilePad.camera))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	var deletedNotes:Selection = new Selection();
 	public function updateNoteLogic(elapsed:Float) {
 		updateSelectionLogic();
@@ -873,7 +887,7 @@ class Charter extends UIState {
 		var pointerJustPressedRight:Bool = false;
 		var pointerJustReleasedRight:Bool = false;
 
-		var touchingPad:Bool = controls.mobileC && FlxG.mouse.overlaps(mobileManager.mobilePad, mobileManager.mobilePad.camera);
+		var touchingPad:Bool = isTouchingMobilePad();
 
 		/**
 		 * DYNAMIC POINTER RESOLUTION
