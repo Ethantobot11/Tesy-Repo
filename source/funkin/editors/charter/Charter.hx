@@ -873,7 +873,7 @@ class Charter extends UIState {
 		 * DYNAMIC POINTER RESOLUTION
 		 */
 		if (controls.mobileC) {
-			ScreenUtil.touch.instance.getWorldPosition(charterCamera, mousePos);
+			ScreenUtil.touch?.instance?.getWorldPosition(charterCamera, mousePos);
 			pointerPressed = ScreenUtil.touch.pressed;
 			pointerJustPressed = ScreenUtil.touch.justPressed;
 			pointerJustReleased = ScreenUtil.touch.justReleased;
@@ -1013,7 +1013,7 @@ class Charter extends UIState {
 				}
 			case NONE:
 				if (pointerJustPressed)
-					controls.mobileC ? ScreenUtil.touch.instance.getWorldPosition(charterCamera, dragStartPos) : FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
+					controls.mobileC ? ScreenUtil.touch?.instance?.getWorldPosition(charterCamera, dragStartPos) : FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
 				else if (pointerJustPressedRight) {
 					closeCurrentContextMenu();
 					gridActionType = DELETE_SELECTION;
@@ -1136,7 +1136,7 @@ class Charter extends UIState {
 						undos.addToUndo(CDeleteSelection(deletedNotes.copy()));
 					}
 					else if (noteDeleteAnims.garbageIcon.alpha <= .5) {
-						var contextMousePos = controls.mobileC ? ScreenUtil.touch.instance.getScreenPosition(uiCamera) : FlxG.mouse.getScreenPosition(uiCamera);
+						var contextMousePos = controls.mobileC ? ScreenUtil.touch?.instance?.getScreenPosition(uiCamera) : FlxG.mouse.getScreenPosition(uiCamera);
 						closeCurrentContextMenu();
 						openContextMenu(topMenu[1].childs, null, contextMousePos.x, contextMousePos.y);
 					}
