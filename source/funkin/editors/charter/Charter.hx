@@ -863,17 +863,15 @@ class Charter extends UIState {
 		}
 	}
 
-	/* The Function That Checks MobilePad Touch */
+	/* The Function That Checks MobilePad Click */
 	public function isTouchingMobilePad():Bool {
 		if (!controls.mobileC || mobileManager == null || mobileManager.mobilePad == null) return false;
 
-		for (buttonGroup in mobileManager.mobilePad.buttons) {
-			for (button in buttonGroup) {
-				if (button != null && (FlxG.mouse.overlaps(button, button.camera) || FlxG.mouse.overlaps(button, mobileManager.mobilePad.camera))) {
-					return true;
-				}
-			}
+		if (mobileManager.mobilePad.anyPressed() || mobileManager.mobilePad.anyJustPressed() || mobileManager.mobilePad.anyJustReleased()) {
+			trace("Touch Stuff Ignored");
+			return true;
 		}
+
 		return false;
 	}
 
