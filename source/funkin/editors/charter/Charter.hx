@@ -876,7 +876,7 @@ class Charter extends UIState {
 	}
 
 	var deletedNotes:Selection = new Selection();
-	public function updateNoteLogic(elapsed:Float):Dynamic {
+	public function updateNoteLogic(elapsed:Float) {
 		updateSelectionLogic();
 
 		var pointerPressed:Bool = false;
