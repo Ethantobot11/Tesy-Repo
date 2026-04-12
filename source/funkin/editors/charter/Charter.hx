@@ -814,21 +814,25 @@ class Charter extends UIState {
 		}
 
 		var pointerJustReleased:Bool = controls.mobileC ? ScreenUtil.touch.justReleased : FlxG.mouse.justReleased;
+		var touchingPad:Bool = controls.mobileC && FlxG.mouse.overlaps(mobileManager.mobilePad, mobileManager.mobilePad.camera);
 
-		for (group in [notesGroup, leftEventsGroup, rightEventsGroup]) {
-			var group:FlxTypedGroup<Dynamic> = cast group;
-			group.forEach(function(s) {
-				s.selected = false;
-				if (gridActionType == NONE) {
-					if (s is CharterNote) {
-						var n:CharterNote = cast s;
-						if ((n.hovered || n.sustainDraggable) && pointerJustReleased) select(cast s);
-					} else if (pointerJustReleased && s.hovered) select(cast s);
-				}
-			});
+		// Only process selection changes if we aren't touching the mobile controls
+		if (!touchingPad) {
+			for (group in [notesGroup, leftEventsGroup, rightEventsGroup]) {
+				var group:FlxTypedGroup<Dynamic> = cast group;
+				group.forEach(function(s) {
+					s.selected = false;
+					if (gridActionType == NONE) {
+						if (s is CharterNote) {
+							var n:CharterNote = cast s;
+							if ((n.hovered || n.sustainDraggable) && pointerJustReleased) select(cast s);
+						} else if (pointerJustReleased && s.hovered) select(cast s);
+					}
+				});
+			}
+			selection = __fixSelection(selection);
+			for(s in selection) s.selected = true;
 		}
-		selection = __fixSelection(selection);
-		for(s in selection) s.selected = true;
 	}
 
 	var __autoSaveLocation:String = null;
@@ -869,6 +873,8 @@ class Charter extends UIState {
 		var pointerJustPressedRight:Bool = false;
 		var pointerJustReleasedRight:Bool = false;
 
+		var touchingPad:Bool = controls.mobileC && FlxG.mouse.overlaps(mobileManager.mobilePad, mobileManager.mobilePad.camera);
+
 		/**
 		 * DYNAMIC POINTER RESOLUTION
 		 */
@@ -878,8 +884,8 @@ class Charter extends UIState {
 			pointerJustPressed = ScreenUtil.touch.justPressed;
 			pointerJustReleased = ScreenUtil.touch.justReleased;
 
-			pointerJustPressedRight = mobilePadJustPressed("A");
-			pointerJustReleasedRight = mobilePadJustReleased("A");
+			pointerJustPressedRight = mobilePadJustPressed("R");
+			pointerJustReleasedRight = mobilePadJustReleased("R");
 		} else {
 			FlxG.mouse.getWorldPosition(charterCamera, mousePos);
 			pointerPressed = FlxG.mouse.pressed;
@@ -887,6 +893,15 @@ class Charter extends UIState {
 			pointerJustReleased = FlxG.mouse.justReleased;
 			pointerJustPressedRight = FlxG.mouse.justPressedRight;
 			pointerJustReleasedRight = FlxG.mouse.justReleasedRight;
+		}
+
+		// Disable all interaction inputs if overlapping the mobile pad
+		if (touchingPad) {
+			pointerPressed = false;
+			pointerJustPressed = false;
+			pointerJustReleased = false;
+			pointerJustPressedRight = false;
+			pointerJustReleasedRight = false;
 		}
 
 		/**
@@ -1386,28 +1401,26 @@ class Charter extends UIState {
 	}
 	#end
 
-		public function handleMobileInputs() {
-		if (mobilePadJustPressed("A")) _edit_delete(null); // Delete
-		if (mobilePadJustPressed("B")) _edit_undo(null); // Undo
-		if (mobilePadJustPressed("C")) _edit_redo(null); // Redo
-		if (mobilePadJustPressed("D")) _playback_play(null); // Play/Pause
-		if (mobilePadPressed("E")) _view_zoomin(null); // Zoom In
-		if (mobilePadPressed("F")) _view_zoomout(null); // Zoom Out
-		if (mobilePadJustPressed("G")) _snap_increasesnap(null); // Snap Inc
-		if (mobilePadJustPressed("H")) _snap_decreasesnap(null); // Snap Dec
+	public function handleMobileInputs() {
+		// DPadMode
+		if (mobilePadPressed("LEFT")) sideScroll -= 20;
+		if (mobilePadPressed("RIGHT")) sideScroll += 20;
+		if (mobilePadPressed("UP")) Conductor.songPosition -= Conductor.stepCrochet;
+		if (mobilePadPressed("DOWN")) Conductor.songPosition += Conductor.stepCrochet;
+		if (mobilePadPressed("UP2")) changeNoteSustain(-1);
+		if (mobilePadPressed("DOWN2")) changeNoteSustain(1);
 
-		if (mobilePadPressed("UP")) sideScroll -= 20;
-		if (mobilePadPressed("DOWN")) sideScroll += 20;
-		if (mobilePadPressed("LEFT")) Conductor.songPosition -= Conductor.stepCrochet;
-		if (mobilePadPressed("RIGHT")) Conductor.songPosition += Conductor.stepCrochet;
-
-		if (mobilePadPressed("UP2")) changeNoteSustain(1);
-		if (mobilePadPressed("DOWN2")) changeNoteSustain(-1);
-
-		if (ScreenUtil.swipe.LEFT) Conductor.songPosition += (Conductor.stepCrochet * 8); // Fast Fwd
-		if (ScreenUtil.swipe.RIGHT) Conductor.songPosition -= (Conductor.stepCrochet * 8); // Rewind
-		if (ScreenUtil.swipe.UP) _snap_increasesnap(null);
-		if (ScreenUtil.swipe.DOWN) _snap_decreasesnap(null);
+		// ActionMode
+		if (mobilePadJustPressed("A")) _chart_playtest(null);
+		if (mobilePadJustPressed("B")) _playback_play(null);
+		if (mobilePadJustPressed("C")) _edit_copy(null);
+		if (mobilePadJustPressed("X")) _edit_cut(null);
+		if (mobilePadJustPressed("Y")) _edit_redo(null);
+		if (mobilePadJustPressed("Z")) _edit_undo(null);
+		if (mobilePadJustPressed("V")) _edit_paste(null);
+		if (mobilePadJustPressed("O")) _opponent_camera_add(null);
+		if (mobilePadJustPressed("P")) _player_camera_add(null);
+		if (mobilePadJustPressed("D")) _edit_delete(null); 
 	}
 
 	var __crochet:Float;
