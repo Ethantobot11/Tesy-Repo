@@ -189,7 +189,7 @@ class UIState extends MusicBeatState {
 
 	public static function setResolutionAware() {
 		resolutionAware = true;
-		FlxG.scaleMode = uiScaleMode;
+		if (Options.editorsResizable || !controls.mobileC) FlxG.scaleMode = uiScaleMode;
 	}
 
 	public static function playEditorSound(path:String) {
