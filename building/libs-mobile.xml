@@ -8,7 +8,14 @@
 
 		<!-- OpenFL & Lime (Required for Flixel) -->
 		<git name="openfl" url="https://github.com/CodenameCrew/cne-openfl" ref="old" />
+		
+		<section if="android">
 		<git name="lime" url="https://github.com/MaysLastPlays-Stuff/lime-h" />
+		</section>
+		
+		<section if="ios">
+		<git name="lime" url="https://github.com/ArkoseLabsOfficial/lime-cne" />
+		</section>
 
 		<!-- Flixel -->
 		<git name="flixel" url="https://github.com/CodenameCrew/cne-flixel" ref="old" />
@@ -33,7 +40,10 @@
 		<lib global="true" name="format" /> <lib name="format" />
 
 		<git name="hxcpp" url="https://github.com/CodenameCrew/cne-hxcpp" ref="old" />
-		<git name="extension-androidtools" url="https://github.com/MAJigsaw77/extension-androidtools" if="android" />
+		
+		<section if="android">
+		<git name="extension-androidtools" url="https://github.com/MAJigsaw77/extension-androidtools"/>
+		</section>
 
 		<git name="flixel-animate" url="https://github.com/CodenameCrew/cne-flixel-animate/" ref="old" skipDeps="true"/>
 	</if>
