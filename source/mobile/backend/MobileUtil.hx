@@ -26,7 +26,11 @@ using StringTools;
 class MobileUtil {
 	public static var currentDirectory:String = null;
 	private static var useAlternativePath:Bool = false;
+	#if android
 	public static var sdk:Int = VERSION.SDK_INT;
+	#else
+	public static var sdk:Int = -1; 
+	#end
 
 	/**
 	 * Get the directory for the application. (External for Android Platform and Internal for iOS Platform.)
