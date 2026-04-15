@@ -38,6 +38,7 @@ jobs:
             
       - name: Installing/Updating libraries
         run: |
+          haxe -cp commandline -D analyzer-optimize --run Main setup -s
           haxe -cp commandline -D analyzer-optimize --run Main setup ios -s
           haxelib remove lime --quiet || true
           haxelib git lime https://github.com/ArkoseLabsOfficial/lime-cne --quiet
